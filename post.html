@@ -54,7 +54,7 @@
     <div id="fallback" class="fallback">
         <h3>📱 App Not Installed?</h3>
         <p>Download our app to view this post:</p>
-        <a href="https://play.google.com/store/apps/details?id=com.kingresearch&pcampaignid=web_share" class="store-btn android-btn">
+        <a href="https://play.google.com/store/apps/details?id=com.kingresearch&hl=en_IN" class="store-btn android-btn">
             📱 Get it on Google Play
         </a>
         <a href="https://apps.apple.com/us/app/king-research/id6503350906" class="store-btn ios-btn">
@@ -76,56 +76,65 @@
         // Update post ID in fallback
         document.getElementById('postId').textContent = postId;
         
-        // Deep link attempts
+        // Deep link URLs
         const customScheme = `yourapp://post/${postId}`;
-        const intentUrl = `intent://post/${postId}#Intent;scheme=yourapp;package=com.yourcompany.yourapp;end`;
+        const intentUrl = `intent://post/${postId}#Intent;scheme=yourapp;package=com.kingresearch;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.kingresearch&hl=en_IN;end`;
         
-        let attemptCount = 0;
-        const maxAttempts = 2;
+        let appOpened = false;
         
         function attemptDeepLink() {
-            attemptCount++;
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             
-            if (attemptCount === 1) {
-                // First attempt: Custom scheme
-                document.getElementById('status').textContent = 'Trying custom scheme...';
-                window.location.href = customScheme;
-                
-                setTimeout(() => {
-                    if (attemptCount === 1) attemptDeepLink();
-                }, 1500);
-                
-            } else if (attemptCount === 2 && /Android/i.test(navigator.userAgent)) {
-                // Second attempt: Android Intent (Android only)
-                document.getElementById('status').textContent = 'Trying Android intent...';
+            if (isAndroid) {
+                // Android: Try intent URL first
+                document.getElementById('status').textContent = 'Opening app...';
                 window.location.href = intentUrl;
                 
-                setTimeout(showFallback, 2000);
+                // Fallback after 3 seconds
+                setTimeout(() => {
+                    if (!appOpened) {
+                        window.location.href = 'https://play.google.com/store/apps/details?id=com.kingresearch&hl=en_IN';
+                    }
+                }, 3000);
+                
+            } else if (isIOS) {
+                // iOS: Try custom scheme
+                document.getElementById('status').textContent = 'Opening app...';
+                window.location.href = customScheme;
+                
+                // Fallback after 2 seconds
+                setTimeout(() => {
+                    if (!appOpened) {
+                        window.location.href = 'https://apps.apple.com/us/app/king-research/id6503350906';
+                    }
+                }, 2000);
                 
             } else {
-                // Show fallback
+                // Desktop: Show fallback immediately
                 showFallback();
             }
         }
         
         function showFallback() {
-            document.getElementById('status').textContent = 'Unable to open app automatically';
+            document.getElementById('status').textContent = 'Choose your platform to download:';
             document.getElementById('fallback').style.display = 'block';
             document.querySelector('.spinner').style.display = 'none';
         }
         
-        // Detect if user returned to page (app didn't open)
-        let pageHidden = false;
+        // Detect if user left page (app probably opened)
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                pageHidden = true;
-            } else if (pageHidden) {
-                // User returned - app probably didn't open
-                showFallback();
+                appOpened = true;
             }
         });
         
-        // Start deep link attempts
+        // Also detect page blur (when app opens)
+        window.addEventListener('blur', () => {
+            appOpened = true;
+        });
+        
+        // Start deep link attempt
         setTimeout(attemptDeepLink, 500);
     </script>
 </body>
