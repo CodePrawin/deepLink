@@ -1,21 +1,43 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "src/pages/*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "src/scripts/*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "src/styles/*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "config/*.js",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
     {
       "src": "/post/([a-zA-Z0-9_-]+)",
-      "dest": "/redirect.html?type=post&id=$1"
+      "dest": "/src/pages/redirect.html?type=post&id=$1"
     },
     {
       "src": "/user/([a-zA-Z0-9_-]+)",
-      "dest": "/redirect.html?type=user&id=$1"
+      "dest": "/src/pages/redirect.html?type=user&id=$1"
     },
     {
       "src": "/share/([a-zA-Z]+)/([a-zA-Z0-9_-]+)",
-      "dest": "/redirect.html?type=$1&id=$2"
+      "dest": "/src/pages/redirect.html?type=$1&id=$2"
+    },
+    {
+      "src": "/",
+      "dest": "/src/pages/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/src/pages/404.html"
     }
   ],
   "headers": [
@@ -25,35 +47,8 @@
         {
           "key": "Content-Type",
           "value": "application/json"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=86400"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }
