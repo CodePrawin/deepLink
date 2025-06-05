@@ -1,16 +1,31 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/post/:id",
-      "destination": "/post.html?id=:id"
+      "src": "src/pages/**/*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/post/(?<id>[a-zA-Z0-9_-]+)",
+      "dest": "/src/pages/redirect.html?type=post&id=$id"
     },
     {
-      "source": "/.well-known/assetlinks.json",
-      "destination": "/api/assetlinks"
+      "src": "/user/(?<id>[a-zA-Z0-9_-]+)",
+      "dest": "/src/pages/redirect.html?type=user&id=$id"
     },
     {
-      "source": "/.well-known/apple-app-site-association",
-      "destination": "/api/apple-app-site-association"
+      "src": "/share/(?<type>[a-zA-Z]+)/(?<id>[a-zA-Z0-9_-]+)",
+      "dest": "/src/pages/redirect.html?type=$type&id=$id"
+    },
+    {
+      "src": "/",
+      "dest": "/src/pages/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/src/pages/404.html"
     }
   ],
   "headers": [
@@ -20,8 +35,35 @@
         {
           "key": "Content-Type",
           "value": "application/json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/src/pages/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }
-  ]
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }

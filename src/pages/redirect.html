@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Opening App...</title>
+    <meta name="description" content="Opening your app content">
+    
+    <!-- Performance: Preload critical resources -->
+    <link rel="preload" href="../scripts/redirect.js" as="script">
+    <link rel="preload" href="../../config/app.config.js" as="script">
+    
+    <!-- Security headers via meta tags -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Inline critical CSS for performance -->
+    <style>
+        :root{--primary-color:#0070f3;--secondary-color:#f4f4f4;--text-color:#333;--border-radius:8px;--transition:all 0.3s ease}*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;color:var(--text-color);background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}.container{max-width:400px;width:90%;background:white;border-radius:var(--border-radius);box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;text-align:center}.header{background:var(--primary-color);color:white;padding:2rem}.header h1{font-size:1.5rem;margin-bottom:0.5rem}.content{padding:2rem}.spinner{width:40px;height:40px;border:3px solid var(--secondary-color);border-top:3px solid var(--primary-color);border-radius:50%;animation:spin 1s linear infinite;margin:1rem auto}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.btn{display:inline-block;padding:0.75rem 1.5rem;margin:0.5rem;border:none;border-radius:var(--border-radius);text-decoration:none;font-weight:500;transition:var(--transition);cursor:pointer}.btn-primary{background:var(--primary-color);color:white}.btn-primary:hover{background:#0051a2;transform:translateY(-2px)}.btn-secondary{background:var(--secondary-color);color:var(--text-color)}.hidden{display:none}.fade-in{animation:fadeIn 0.5s ease-in}@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@media (max-width:480px){.container{width:95%;margin:1rem}.header,.content{padding:1.5rem}}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Opening App</h1>
+            <p>Please wait...</p>
+        </div>
+        
+        <div class="content">
+            <div id="spinner" class="spinner"></div>
+            <p id="status">Attempting to open your app...</p>
+            
+            <div id="fallback" class="hidden">
+                <h3>📱 Get Our App</h3>
+                <p>Download to view this content:</p>
+                
+                <div style="margin: 1.5rem 0;">
+                    <a id="primary-store-btn" href="#" class="btn btn-primary">
+                        📱 Download App
+                    </a>
+                    <a id="secondary-store-btn" href="#" class="btn btn-secondary hidden">
+                        Alternative Platform
+                    </a>
+                </div>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem;">
+                    <p><strong>Content:</strong> <span id="content-type"></span> #<span id="content-id"></span></p>
+                    <p><strong>Platform:</strong> <span id="content-platform"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load configurations first -->
+    <script src="../../config/app.config.js"></script>
+    <script src="../../config/platforms.config.js"></script>
+    
+    <!-- Main redirect logic -->
+    <script src="../scripts/redirect.js"></script>
+</body>
+</html>
