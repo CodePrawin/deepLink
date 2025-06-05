@@ -1,31 +1,21 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/pages/**/*.html",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
-      "src": "/post/(?<id>[a-zA-Z0-9_-]+)",
-      "dest": "/src/pages/redirect.html?type=post&id=$id"
+      "src": "/post/([a-zA-Z0-9_-]+)",
+      "dest": "/redirect.html?type=post&id=$1"
     },
     {
-      "src": "/user/(?<id>[a-zA-Z0-9_-]+)",
-      "dest": "/src/pages/redirect.html?type=user&id=$id"
+      "src": "/user/([a-zA-Z0-9_-]+)",
+      "dest": "/redirect.html?type=user&id=$1"
     },
     {
-      "src": "/share/(?<type>[a-zA-Z]+)/(?<id>[a-zA-Z0-9_-]+)",
-      "dest": "/src/pages/redirect.html?type=$type&id=$id"
-    },
-    {
-      "src": "/",
-      "dest": "/src/pages/index.html"
+      "src": "/share/([a-zA-Z]+)/([a-zA-Z0-9_-]+)",
+      "dest": "/redirect.html?type=$1&id=$2"
     },
     {
       "src": "/(.*)",
-      "dest": "/src/pages/404.html"
+      "dest": "/$1"
     }
   ],
   "headers": [
@@ -43,7 +33,7 @@
       ]
     },
     {
-      "source": "/src/pages/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "X-Content-Type-Options",
